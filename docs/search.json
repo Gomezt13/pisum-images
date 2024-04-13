@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "PhenoCrops Project",
+    "section": "",
+    "text": "Website for crop phenotyping.\nTools required for image analysis"
+  },
+  {
+    "objectID": "index.html#resources",
+    "href": "index.html#resources",
+    "title": "PhenoCrops Project",
+    "section": "Resources",
+    "text": "Resources\nGit: Version control system\nAnaconda: Anaconda\nLabel Studio: Label Studio\nLabels design: Huito package\nPhenoboard: Phenotyping board\nscale: Phenotyping board"
+  },
+  {
+    "objectID": "code.html",
+    "href": "code.html",
+    "title": "code",
+    "section": "",
+    "text": "Image modification\n\nlibrary(tidyverse)\nlibrary(magick)\n\nimgdir &lt;- choose.dir() \nnewdir &lt;- choose.dir() \n\nimgfiles &lt;- list.files(path = imgdir\n                       , full.names = T\n                       , recursive = T\n                       )\n\nmovefiles &lt;- imgfiles %&gt;% \n  enframe(name = \"num\", value = \"path\") %&gt;% \n  mutate(filename = basename(path)) %&gt;% \n  mutate(across(filename, ~make.names(.))) %&gt;% \n  mutate(newdir = file.path({{newdir}}, filename)) \n\nwalk(movefiles, \\(x) {\n  \n  file.copy(from = movefiles$path, to = movefiles$newdir\n            , overwrite = T)\n})\n\n\n\nImage URL for Label Studio\n\nlibrary(tidyverse)\n\nfolder &lt;- \"images\"\nrepo &lt;- \"https://flavjack.github.io/pheno-mashua/\"\n\nimgs &lt;- list.files(pattern = \"(jpg|jpeg|png|JPG)$\"\n                   , recursive = T) %&gt;% \n  keep(~grepl(folder, .)) %&gt;% \n  discard(~grepl(\"docs\", .)) %&gt;%\n  enframe(name = \"num\", value = \"path\") %&gt;% \n  mutate(url = file.path(repo, path))\n\nimgs %&gt;% \n  select(url) %&gt;% \n  write_csv(\"images4labelstudio.txt\", col_names = F)"
+  }
+]
