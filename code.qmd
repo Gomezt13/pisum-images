@@ -1,0 +1,58 @@
+---
+title: "code"
+editor_options: 
+  chunk_output_type: console
+execute: 
+  warning: false
+  echo: true
+  eval: false
+---
+
+# Image modification
+
+```{r}
+library(tidyverse)
+library(magick)
+
+imgdir <- choose.dir() # "C:\\Users\\floza\\OneDrive\\Imágenes\\maize-germination"
+newdir <- choose.dir() # "C:\\Users\\floza\\git\\pheno-germination\\library\\dtaipe"
+
+imgfiles <- list.files(path = imgdir
+                       , full.names = T
+                       , recursive = T
+                       )
+
+movefiles <- imgfiles %>% 
+  enframe(name = "num", value = "path") %>% 
+  mutate(rename = gsub('.*germination/(.+)', '\\1', path)) %>% 
+  mutate(across(rename, ~gsub('/', '_', .))) %>% 
+  mutate(across(rename, ~gsub('[[:space:]]', '-', .))) %>% 
+  mutate(across(rename, ~gsub('Rep.', 'Rep-', .))) %>% 
+  mutate(newdir = file.path({{newdir}}, rename)) 
+
+walk(movefiles, \(x) {
+  
+  file.copy(from = movefiles$path, to = movefiles$newdir
+            , overwrite = T)
+  
+})
+```
+
+# Image URL for Label Studio
+
+```{r}
+library(tidyverse)
+
+folder <- "library"
+
+imgs <- list.files(pattern = "(jpg|jpeg|png)$"
+                   , recursive = T) %>% 
+  keep(~grepl(folder, .)) %>% 
+  discard(~grepl("docs", .)) %>%
+  enframe(name = "num", value = "path") %>% 
+  mutate(url = file.path("flavjack.github.io/pheno-germination/", path))
+
+imgs %>% 
+  select(url) %>% 
+  write_csv("images4labelstudio.txt", col_names = F)
+```
