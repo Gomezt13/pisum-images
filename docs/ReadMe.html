@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>code – pheno-crops</title>
+<title>Repository for Image Analysis Annotation – pheno-crops</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -132,7 +132,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./code.html" aria-current="page"> 
+    <a class="nav-link" href="./code.html"> 
 <span class="menu-text">Coding</span></a>
   </li>  
 </ul>
@@ -151,8 +151,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#image-modification" id="toc-image-modification" class="nav-link active" data-scroll-target="#image-modification">Image modification</a></li>
-  <li><a href="#image-url-for-label-studio" id="toc-image-url-for-label-studio" class="nav-link" data-scroll-target="#image-url-for-label-studio">Image URL for Label Studio</a></li>
+  <li><a href="#repository-for-image-analysis-annotation" id="toc-repository-for-image-analysis-annotation" class="nav-link active" data-scroll-target="#repository-for-image-analysis-annotation">Repository for Image Analysis Annotation</a></li>
   </ul>
 </nav>
     </div>
@@ -161,7 +160,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">code</h1>
+<h1 class="title">Repository for Image Analysis Annotation</h1>
 </div>
 
 
@@ -178,56 +177,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="image-modification" class="level1">
-<h1>Image modification</h1>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magick)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>imgdir <span class="ot">&lt;-</span> <span class="fu">choose.dir</span>() </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>newdir <span class="ot">&lt;-</span> <span class="fu">choose.dir</span>() </span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>imgfiles <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> imgdir</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                       , <span class="at">full.names =</span> T</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                       , <span class="at">recursive =</span> T</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>                       )</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>movefiles <span class="ot">&lt;-</span> imgfiles <span class="sc">%&gt;%</span> </span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">enframe</span>(<span class="at">name =</span> <span class="st">"num"</span>, <span class="at">value =</span> <span class="st">"path"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">imgname =</span> <span class="fu">gsub</span>(<span class="st">'.*GERM/(.+)'</span>, <span class="st">'</span><span class="sc">\\</span><span class="st">1'</span>, path)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(imgname, <span class="sc">~</span><span class="fu">gsub</span>(<span class="st">'/'</span>, <span class="st">'_'</span>, .))) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(imgname, <span class="sc">~</span><span class="fu">gsub</span>(<span class="st">'[[:space:]]'</span>, <span class="st">'-'</span>, .))) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(imgname, <span class="sc">~</span><span class="fu">gsub</span>(<span class="st">'</span><span class="sc">\\</span><span class="st">(|</span><span class="sc">\\</span><span class="st">)'</span>, <span class="st">'_'</span>, .))) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(imgname, <span class="sc">~</span><span class="fu">gsub</span>(<span class="st">'__'</span>, <span class="st">'_'</span>, .))) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">newdir =</span> <span class="fu">file.path</span>({{newdir}}, imgname)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(imgname, <span class="st">"DIA-(3|4)"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(imgname, <span class="st">"mp4"</span>))</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(movefiles)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(movefiles, \(x) {</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">file.copy</span>(<span class="at">from =</span> movefiles<span class="sc">$</span>path, <span class="at">to =</span> movefiles<span class="sc">$</span>newdir</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>            , <span class="at">overwrite =</span> T)</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="image-url-for-label-studio" class="level1">
-<h1>Image URL for Label Studio</h1>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>newdir <span class="ot">&lt;-</span> <span class="st">"library/maiz/"</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>imgs <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> newdir</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                   , <span class="at">pattern =</span> <span class="st">"jpg"</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                   , <span class="at">full.names =</span> T</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                   ) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">enframe</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">url =</span> <span class="fu">file.path</span>(<span class="st">"https://flavjack.github.io/pheno-germination"</span>, value))</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>imgs <span class="sc">%&gt;%</span> </span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(url) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(<span class="fu">file.path</span>(newdir, <span class="st">"images4labelstudio.txt"</span>), <span class="at">col_names =</span> F)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<section id="repository-for-image-analysis-annotation" class="level1">
+<h1>Repository for Image Analysis Annotation</h1>
+<p>This repository is designed for the management, organization, and utilization of images for annotation processes in image analysis projects. The following guidelines must be observed:</p>
+<ol type="1">
+<li><p>All images must be placed in the <code>library</code> folder.</p>
+<ul>
+<li>The script <code>code</code> contains the instructions for moving images in blocks.</li>
+</ul></li>
+<li><p>It is necessary to ensure that images are not duplicated and are properly rotated before use.</p></li>
+<li><p>The website associated with this repository will display only the content defined in the <code>index.qmd</code> file.</p>
+<ul>
+<li><p>The website must be built using the command:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render website</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+</ul></li>
+<li><p>The <code>library</code> folder will be hosted on the website, and each image will be assigned a unique URL.</p></li>
+<li><p>Image URLs can be extracted using the code provided in <code>code.qmd</code>.</p></li>
+<li><p>The generated links should be employed as references for annotations in <em>Label Studio</em>.</p></li>
+</ol>
 
 
 </section>
